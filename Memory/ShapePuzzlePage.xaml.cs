@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -13,7 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
+using Windows.UI.Xaml.Shapes;
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
 namespace Memory
@@ -51,6 +52,20 @@ namespace Memory
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
+
+            //TODO: make color brush array
+
+            SolidColorBrush[] colors = new SolidColorBrush[7];
+            colors[0] = new SolidColorBrush(Colors.Purple);
+            colors[1] = new SolidColorBrush(Colors.Blue);
+            colors[2] = new SolidColorBrush(Colors.Red);
+            colors[3] = new SolidColorBrush(Colors.Green);
+            colors[4] = new SolidColorBrush(Colors.Cyan);
+            colors[5] = new SolidColorBrush(Colors.Orange);
+            colors[6] = new SolidColorBrush(Colors.SeaGreen);
+
+            //TODO: draw shapes
+            
         }
 
         /// <summary>
@@ -102,5 +117,48 @@ namespace Memory
         }
 
         #endregion
+
+        private void MakeCards(object sender, RoutedEventArgs e){
+            //TODO: generate board size and 
+            //to be used later for dynamic board size
+            double boardHeight = board.ActualHeight;
+            double boardWidth = board.ActualWidth;
+            Thickness margin = board.Margin;
+            int numRows = 3;
+            int numCols = 6;
+
+            for(int i = 0; i< numRows; i++){
+                board.RowDefinitions.Add(new RowDefinition());
+            }
+
+            for (int i = 0; i < numCols; i++){
+                board.ColumnDefinitions.Add(new ColumnDefinition());
+            }
+            
+            int numCards = numRows * numCols;
+            SolidColorBrush back = new SolidColorBrush(Colors.Beige);
+            for (int r = 0; r < numRows; r++) {
+                for (int c = 0; c < numCols; c++) {
+                    
+                    //TODO: extract method
+                    Rectangle b = new Rectangle();
+                    b.Margin = margin;
+                    b.Fill = back;
+                    Grid.SetColumn(b, c);
+                    Grid.SetRow(b, r);
+                    board.Children.Add(b);
+                    
+                    
+                }
+            }
+            //TODO:make separate card class?
+
+            
+
+        }
+        
+
+
+        //TODO: highlight when mouse moves over boxes
     }
 }
