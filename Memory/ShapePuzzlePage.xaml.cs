@@ -6,7 +6,6 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -14,7 +13,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Windows.UI.Xaml.Shapes;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -23,7 +21,7 @@ namespace Memory
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class ShapePuzzlePage : Page
     {
 
         private NavigationHelper navigationHelper;
@@ -47,14 +45,13 @@ namespace Memory
         }
 
 
-        public MainPage()
+        public ShapePuzzlePage()
         {
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
         }
-
 
         /// <summary>
         /// Populates the page with content passed during navigation. Any saved state is also
@@ -82,8 +79,7 @@ namespace Memory
         private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
         }
-        
-        
+
         #region NavigationHelper registration
 
         /// The methods provided in this section are simply used to allow
@@ -106,22 +102,5 @@ namespace Memory
         }
 
         #endregion
-
-        Rectangle oldCard;
-
-
-        private void CardClicked(object sender, PointerRoutedEventArgs e)
-        {
-            if (oldCard != null)
-            {
-                SolidColorBrush beige = new SolidColorBrush(Colors.Beige);
-                oldCard.Fill = beige;
-
-            }
-            oldCard = (Rectangle)sender;
-            //SolidColorBrush
-            SolidColorBrush pink = new SolidColorBrush(Colors.Pink);
-            oldCard.Fill = pink;
-        }
     }
 }
