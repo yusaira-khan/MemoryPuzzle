@@ -105,6 +105,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Card.cs" />
     <Compile Include="ShapePuzzlePage.xaml.cs">
       <DependentUpon>ShapePuzzlePage.xaml</DependentUpon>
     </Compile>

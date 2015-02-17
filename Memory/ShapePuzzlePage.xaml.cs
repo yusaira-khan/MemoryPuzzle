@@ -46,6 +46,8 @@ namespace Memory
         }
 
 
+        SolidColorBrush[] colors = new SolidColorBrush[7];
+
         public ShapePuzzlePage()
         {
             this.InitializeComponent();
@@ -55,7 +57,7 @@ namespace Memory
 
             //TODO: make color brush array
 
-            SolidColorBrush[] colors = new SolidColorBrush[7];
+            
             colors[0] = new SolidColorBrush(Colors.Purple);
             colors[1] = new SolidColorBrush(Colors.Blue);
             colors[2] = new SolidColorBrush(Colors.Red);
@@ -63,6 +65,7 @@ namespace Memory
             colors[4] = new SolidColorBrush(Colors.Cyan);
             colors[5] = new SolidColorBrush(Colors.Orange);
             colors[6] = new SolidColorBrush(Colors.SeaGreen);
+
 
             //TODO: draw shapes
             
@@ -147,17 +150,22 @@ namespace Memory
                     Grid.SetColumn(b, c);
                     Grid.SetRow(b, r);
                     board.Children.Add(b);
+
                     
                     
                 }
             }
-            //TODO:make separate card class?
 
+            //TODO: add instructions for card generation
+            //TODO:random card placing
             
 
         }
-        
 
+        private void HighlightCard(object sender, RoutedEventArgs e){
+            Rectangle sent = (Rectangle)sender;
+            
+        }
 
         //TODO: highlight when mouse moves over boxes
     }
