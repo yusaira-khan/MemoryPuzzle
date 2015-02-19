@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Shapes;
 namespace Memory{
     class Card{
 
-        enum CardShape {
+        public enum CardShape {
             Donut, Ellipse, Square, Diamond, Dumbell
         };
 
@@ -24,9 +24,10 @@ namespace Memory{
         private Rectangle back;
         
         private Shape[] front;
-        private const SolidColorBrush backColor = new SolidColorBrush(Colors.Beige);
-        private const Thickness margin = new Thickness(10.0);
-        Card(Grid board, int gridRow, int gridColumn, SolidColorBrush cardColor, CardShape shape){
+        private  SolidColorBrush backColor = new SolidColorBrush(Colors.Beige);
+        private  Thickness margin = new Thickness(10.0);
+
+        public Card(Grid board, int gridRow, int gridColumn, SolidColorBrush cardColor, CardShape shape){
             this.board = board;
             Row = gridRow;
             Column = gridColumn;
@@ -52,15 +53,34 @@ namespace Memory{
                 case CardShape.Ellipse:
                     break;
                 case CardShape.Square:
+
+                    double length = 50;
+                    double mh = (back.ActualHeight+length), mw = (back.ActualWidth+length);
+                    front = new Shape[1];
+                    front[0] = new Rectangle();
+                    front[0].Fill = Color;
+                    front[0].Margin = new Thickness(mw,mh,mw,mh);
                     break;
             }
             
             
         }
+        public void reveal() {
+            for (int i = 0; i < front.Length; i++) {
+                placeOnBoard(front[i]);
+            }
+            revealed = true;
+        }
+        public void cover() {
+            for (int i = 0; i < front.Length; i++) {
+                board.Children.Remove(front[i]);
+            }
+        }
         private void createBack() {
             back = new Rectangle();
             back.Fill = backColor;
             back.Margin = margin;
+            //back.
         }
 
 
@@ -76,6 +96,10 @@ namespace Memory{
         public int Column { get; private set; }
         public SolidColorBrush Color { get; private set; }
         public CardShape Shape { get; private set; }
+        public Rectangle Back { get{
+            return back;
+        }}
+        public bool Revealed { get { return revealed; } }
         
     }
 

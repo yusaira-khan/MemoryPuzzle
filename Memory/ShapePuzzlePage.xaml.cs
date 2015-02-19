@@ -121,6 +121,7 @@ namespace Memory
 
         #endregion
 
+        Card[] cards;
         private void MakeCards(object sender, RoutedEventArgs e){
             //TODO: generate board size and 
             //to be used later for dynamic board size
@@ -139,34 +140,52 @@ namespace Memory
             }
             
             int numCards = numRows * numCols;
-            SolidColorBrush back = new SolidColorBrush(Colors.Beige);
-            for (int r = 0; r < numRows; r++) {
-                for (int c = 0; c < numCols; c++) {
-                    
-                    //TODO: extract method
-                    Rectangle b = new Rectangle();
-                    b.Margin = margin;
-                    b.Fill = back;
-                    Grid.SetColumn(b, c);
-                    Grid.SetRow(b, r);
-                    board.Children.Add(b);
+
+            cards = new Card[numCards];
+            cards[0] = new Card(board, 0, 0, colors[0], Card.CardShape.Square);
+            cards[1] = new Card(board, 0, 1, colors[1], Card.CardShape.Square);
+            cards[0].Back.PointerPressed+=CheckCard;
+            cards[1].Back.PointerPressed += CheckCard;
 
                     
                     
-                }
-            }
+                
+            
 
             //TODO: add instructions for card generation
             //TODO:random card placing
             
 
         }
+        Card first;
+        private void CheckCard(object sender, PointerRoutedEventArgs e) {
 
-        private void HighlightCard(object sender, RoutedEventArgs e){
-            Rectangle sent = (Rectangle)sender;
+            Rectangle rect = (Rectangle)sender;
+
+            if (first == null) {
+                if (rect == cards[0].Back) {
+                    first = cards[0];
+
+                }
+                else { first = cards[1]; }
+                first.reveal();
+
+            }
+            else {
+                if (cards[0].Revealed) { cards[1].reveal(); } else { cards[0].reveal(); }
+            }
             
         }
+        private void HighlightCard(object sender, PointerRoutedEventArgs e) {
+            Rectangle sent = (Rectangle)sender;
+            //TODO: highlight when mouse moves over boxes
+            
+        }
+        
+        private void removeHighligt(object sender, PointerRoutedEventArgs e) {
+            Rectangle sent = (Rectangle)sender;
+        }
 
-        //TODO: highlight when mouse moves over boxes
+        
     }
 }
