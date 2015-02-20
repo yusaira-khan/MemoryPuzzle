@@ -120,9 +120,12 @@ namespace Memory
         }
 
         #endregion
-
+        public Grid Board ;
         Card[] cards;
         private void MakeCards(object sender, RoutedEventArgs e){
+            border = new Border();
+            border.BorderThickness=new Thickness(10);
+            border.BorderBrush= new SolidColorBrush(Colors.Black);
             //TODO: generate board size and 
             //to be used later for dynamic board size
             double boardHeight = board.ActualHeight;
@@ -140,11 +143,14 @@ namespace Memory
             }
             
             int numCards = numRows * numCols;
-
+            int[] x = {0,0};
+            int[] y = {0,1};
             cards = new Card[numCards];
-            cards[0] = new Card(board, 0, 0, colors[0], Card.CardShape.Square);
-            cards[1] = new Card(board, 0, 1, colors[1], Card.CardShape.Square);
+            cards[0] = new Card(board,x, colors[0], Card.CardShape.Dumbell);
+            cards[1] = new Card(board, y, colors[1], Card.CardShape.Square);
             cards[0].Back.PointerPressed+=CheckCard;
+            //cards[0].Back.PointerEntered += HighlightCard;
+            //cards[0].Back.PointerExited += removeHighligt;
             cards[1].Back.PointerPressed += CheckCard;
 
                     
@@ -176,8 +182,10 @@ namespace Memory
             }
             
         }
+        Border border;
         private void HighlightCard(object sender, PointerRoutedEventArgs e) {
             Rectangle sent = (Rectangle)sender;
+
             //TODO: highlight when mouse moves over boxes
             
         }

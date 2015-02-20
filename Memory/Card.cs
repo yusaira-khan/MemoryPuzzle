@@ -27,18 +27,20 @@ namespace Memory{
         private  SolidColorBrush backColor = new SolidColorBrush(Colors.Beige);
         private  Thickness margin = new Thickness(10.0);
 
-        public Card(Grid board, int gridRow, int gridColumn, SolidColorBrush cardColor, CardShape shape){
+        public Card(Grid board, int[] rc, SolidColorBrush cardColor, CardShape shape){
             this.board = board;
-            Row = gridRow;
-            Column = gridColumn;
+            
+            Row = rc[0];
+            Column = rc[1];
             Color = cardColor;
             Shape = shape;
             
             createBack();
-            createFront();
-
+            
             revealed = false;
             placeOnBoard(back);
+            
+            
         }
 
         private void createFront(){
@@ -47,25 +49,63 @@ namespace Memory{
                 case CardShape.Diamond:
                     break;
                 case CardShape.Donut:
+                    double outer = 120;
+                    double inner = 50;
+                    double oh = (back.ActualHeight - outer) / 2, ow = (back.ActualWidth - outer) / 2;
+                    double ih = (back.ActualHeight - outer + inner) / 2, iw = (back.ActualWidth - outer + inner) / 2;
+                    front = new Shape[2];
+                    front[0] = new Ellipse();
+                    front[1]=new Ellipse();
+                    front[0].Margin = new Thickness(ow,oh,ow,oh);
+                    front[1].Margin = new Thickness(iw,ih,iw,ih);
+                    front[0].Fill = Color;
+                    front[1].Fill = back.Fill;
                     break;
                 case CardShape.Dumbell:
+                      double h = 100,w=70;
+                      double radius = 40;
+                      
+                    double rh = (back.ActualHeight-h)/2, rw = (back.ActualWidth-h+w)/2;
+                    double tt = (back.ActualHeight - h + radius) / 2, tb = (back.ActualHeight - radius) / 2;
+                    double tr = (back.ActualWidth - w + radius) / 2, tl = (back.ActualWidth - w + radius) / 2;
+                    front = new Shape[2];
+                    front[0] = new Rectangle();
+                    front[1]=new Ellipse();
+                    front[0].Fill = Color;
+                    front[0].Margin = new Thickness(rw,rh,rw,rh);
+ 
+                    front[1].Fill = Color;
+                    front[1].Margin = new Thickness(tl,tt,tr,tb);
                     break;
                 case CardShape.Ellipse:
+
+                    
+                    front = new Shape[1];
+                    front[0] = new Ellipse();
+                    front[0].Fill = Color;
+                    front[0].Margin = new Thickness(35);
                     break;
                 case CardShape.Square:
 
-                    double length = 50;
-                    double mh = (back.ActualHeight+length), mw = (back.ActualWidth+length);
+                    double length = 100;
+                    double mh = (back.ActualHeight-length)/2, mw = (back.ActualWidth-length)/2;
+                    
                     front = new Shape[1];
                     front[0] = new Rectangle();
+                    
                     front[0].Fill = Color;
                     front[0].Margin = new Thickness(mw,mh,mw,mh);
+                    
                     break;
             }
             
             
         }
         public void reveal() {
+            //
+            if (front == null) createFront();
+            back.IsHitTestVisible = false;
+            //board.Children.Remove(back);
             for (int i = 0; i < front.Length; i++) {
                 placeOnBoard(front[i]);
             }
@@ -75,11 +115,13 @@ namespace Memory{
             for (int i = 0; i < front.Length; i++) {
                 board.Children.Remove(front[i]);
             }
+            back.IsHitTestVisible=true;
         }
         private void createBack() {
             back = new Rectangle();
             back.Fill = backColor;
             back.Margin = margin;
+            
             //back.
         }
 
