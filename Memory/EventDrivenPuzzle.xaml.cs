@@ -22,7 +22,7 @@ namespace Memory
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class ShapePuzzlePage : Page
+    public sealed partial class EventDrivenPuzzle : Page
     {
 
         private NavigationHelper navigationHelper;
@@ -48,7 +48,7 @@ namespace Memory
 
         SolidColorBrush[] colors = new SolidColorBrush[7];
 
-        public ShapePuzzlePage()
+        public EventDrivenPuzzle()
         {
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
@@ -166,21 +166,28 @@ namespace Memory
         Card first;
         private void CheckCard(object sender, PointerRoutedEventArgs e) {
 
-            Rectangle rect = (Rectangle)sender;
-
+            Card currentCard = cards[getCardIndexFromClick(sender)];
+            currentCard.reveal();
             if (first == null) {
-                if (rect == cards[0].Back) {
-                    first = cards[0];
-
-                }
-                else { first = cards[1]; }
-                first.reveal();
-
+                first = currentCard;
+                return;
             }
-            else {
-                if (cards[0].Revealed) { cards[1].reveal(); } else { cards[0].reveal(); }
+
+            if (first.Color != currentCard.Color || first.Shape != currentCard.Shape) {
+                first.cover();
+                currentCard.cover();
             }
             
+        }
+
+        public int getCardIndexFromClick(object sender) {
+            Rectangle back = (Rectangle)sender;
+            for (int i = 0; i < 2; i++) {
+                if (back == cards[i].Back) {
+                    return i;
+                }
+            }
+            throw new Exception("wooooo!");
         }
         Border border;
         private void HighlightCard(object sender, PointerRoutedEventArgs e) {

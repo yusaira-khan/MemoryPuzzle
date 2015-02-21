@@ -47,6 +47,23 @@ namespace Memory{
             //TODO: add shape drawing instructions
             switch (Shape) {
                 case CardShape.Diamond:
+                    double width=50;
+                    double mdh = (back.ActualHeight)/2, mdw = (back.ActualWidth)/2;
+                    double dt = (back.ActualHeight-width), db = (back.ActualHeight+width);
+                    double cl = (back.ActualWidth-width), cr = (back.ActualWidth+width);
+                    front = new Shape[1];
+                    //front[0] = new Polygon();
+                    Polygon p = new Polygon();
+                    p.Points = new PointCollection();
+                    
+                    p.Points.Add(new Windows.Foundation.Point(mdw, dt));
+                    p.Points.Add(new Windows.Foundation.Point(cl,mdh));
+                    p.Points.Add(new Windows.Foundation.Point(mdw, db));
+                    p.Points.Add(new Windows.Foundation.Point(cr,mdh));
+                    
+                    
+                    p.Fill = Color;
+                    front[0] = p;
                     break;
                 case CardShape.Donut:
                     double outer = 120;
@@ -62,20 +79,25 @@ namespace Memory{
                     front[1].Fill = back.Fill;
                     break;
                 case CardShape.Dumbell:
-                      double h = 100,w=70;
+                      double h = 100,w=20,m = 50 ;
                       double radius = 40;
                       
-                    double rh = (back.ActualHeight-h)/2, rw = (back.ActualWidth-h+w)/2;
-                    double tt = (back.ActualHeight - h + radius) / 2, tb = (back.ActualHeight - radius) / 2;
-                    double tr = (back.ActualWidth - w + radius) / 2, tl = (back.ActualWidth - w + radius) / 2;
-                    front = new Shape[2];
+                    double rh = (back.ActualHeight-h)/2, rw = (back.ActualWidth-w)/2;
+                    double ct = (back.ActualHeight - radius -h) / 2, cb = (back.ActualHeight -  radius +h) / 2;
+                    double cw = (back.ActualWidth - radius) / 2;
+                    front = new Shape[3];
                     front[0] = new Rectangle();
                     front[1]=new Ellipse();
+                    front[2] = new Ellipse();
                     front[0].Fill = Color;
                     front[0].Margin = new Thickness(rw,rh,rw,rh);
  
                     front[1].Fill = Color;
-                    front[1].Margin = new Thickness(tl,tt,tr,tb);
+                    front[1].Margin = new Thickness(cw,ct,cw,cb);
+
+                     front[2].Fill = Color;
+                    front[2].Margin = new Thickness(cw,cb,cw,ct);
+
                     break;
                 case CardShape.Ellipse:
 

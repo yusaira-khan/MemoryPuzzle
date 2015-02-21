@@ -106,8 +106,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Card.cs" />
-    <Compile Include="ShapePuzzlePage.xaml.cs">
-      <DependentUpon>ShapePuzzlePage.xaml</DependentUpon>
+    <Compile Include="EventDrivenPuzzle.xaml.cs">
+      <DependentUpon>EventDrivenPuzzle.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPageOld.xaml.cs">
       <DependentUpon>MainPageOld.xaml</DependentUpon>
@@ -137,7 +137,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ShapePuzzlePage.xaml">
+    <Page Include="EventDrivenPuzzle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
