@@ -29,13 +29,13 @@ namespace Memory{
         private double marginValue = 10.0;
         private Thickness margin;
 
-        public Card(Grid board, int[] rc, SolidColorBrush cardColor, CardShape shape){
+        public Card(Grid board, int[] rc, Tuple<CardShape,SolidColorBrush> combination){
             this.board = board;
             margin = new Thickness(this.marginValue);
             Row = rc[0];
             Column = rc[1];
-            Color = cardColor;
-            Shape = shape;
+            Color = combination.Item2;
+            Shape = combination.Item1;
             
             createBack();
             
@@ -45,8 +45,10 @@ namespace Memory{
             
         }
 
+        //TODO: Make cards more abstract. 
+        //TODO: make subclasses with drawing instructions
         private void createFront(){
-            //TODO: add shape drawing instructions
+
             switch (Shape) {
                 case CardShape.Diamond:
                     double width=150;
@@ -135,18 +137,13 @@ namespace Memory{
             animate();
         }
         public async void cover() {
-           // Timer t = new Timer(new TimerCallback(removeFront), null, 500, Timeout.Infinite);
-            
-                removeFront();
-           // await Task.Run(() => removeFront());
-            
-        }
-        private void removeFront() {
             for (int i = 0; i < front.Length; i++) {
                 board.Children.Remove(front[i]);
             }
             back.IsHitTestVisible = true;
+            
         }
+
         private void animate() {
             
         }

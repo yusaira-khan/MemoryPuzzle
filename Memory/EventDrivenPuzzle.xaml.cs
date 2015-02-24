@@ -47,7 +47,7 @@ namespace Memory
         }
 
 
-        SolidColorBrush[] colors = new SolidColorBrush[7];
+        SolidColorBrush[] colors;
 
         public EventDrivenPuzzle()
         {
@@ -56,9 +56,8 @@ namespace Memory
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
 
-            //TODO: make color brush array
 
-            
+            colors = new SolidColorBrush[7];
             colors[0] = new SolidColorBrush(Colors.Purple);
             colors[1] = new SolidColorBrush(Colors.Blue);
             colors[2] = new SolidColorBrush(Colors.Red);
@@ -67,8 +66,6 @@ namespace Memory
             colors[5] = new SolidColorBrush(Colors.Orange);
             colors[6] = new SolidColorBrush(Colors.SeaGreen);
 
-
-            //TODO: draw shapes
             
         }
 
@@ -98,7 +95,7 @@ namespace Memory
         private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
         }
-
+        int numCards;
         #region NavigationHelper registration
 
         /// The methods provided in this section are simply used to allow
@@ -143,25 +140,30 @@ namespace Memory
                 board.ColumnDefinitions.Add(new ColumnDefinition());
             }
             
-            int numCards = numRows * numCols;
-            int[] x = {0,0};
-            int[] y = {0,1};
+            numCards = numRows * numCols;
+
             cards = new Card[numCards];
-            cards[0] = new Card(board,x, colors[0], Card.CardShape.Diamond);
-            cards[1] = new Card(board, y, colors[1], Card.CardShape.Square);
-            cards[0].Back.PointerPressed+=CheckCard;
-            //cards[0].Back.PointerEntered += HighlightCard;
-            //cards[0].Back.PointerExited += removeHighligt;
-            cards[1].Back.PointerPressed += CheckCard;
-
-                    
-                    
-                
-            
-
-            //TODO: add instructions for card generation
-            //TODO:random card placing
-            
+            var used = new List<Tuple<Card.CardShape, SolidColorBrush>>();
+            var combs = getAllCominations();
+            for (int i = 0; i < numCards/2; i++) {
+                var current = combs.ElementAt(i);
+                used.Add(current);
+                used.Add(current);
+            }
+            Shuffle(used);
+            int t = 0;
+            for (int r = 0; r < numRows; r++) {
+                for (int c = 0; c < numCols; c++, t++) { 
+                     int[] rc = {r,c};
+                     cards[t] = new Card(board, rc, used.ElementAt(t));
+                     cards[t].Back.PointerPressed += CheckCard;
+                }
+            }
+               //TODO: make more abstract, subclass
+            //TODO: make XNA driven game
+            //TODO: add highscore
+            //TODO: understand actions
+            //TODO: add game won screen
 
         }
         Card first;
@@ -176,21 +178,22 @@ namespace Memory
 
             /*first.cover();
             first = currentCard;*/
-
+            var firstCopy = first;
            if (first.Color != currentCard.Color || first.Shape != currentCard.Shape) {
                var UISyncContext = TaskScheduler.FromCurrentSynchronizationContext();
                Task.Delay(500).ContinueWith((antecedent) => {
-                   first.cover();
+                   firstCopy.cover();
                    currentCard.cover();
-                   first = null;
+                   
                }, UISyncContext);
             }
+           first = null;
             
         }
 
         public int getCardIndexFromClick(object sender) {
             Rectangle back = (Rectangle)sender;
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < numCards; i++) {
                 if (back == cards[i].Back) {
                     return i;
                 }
@@ -209,6 +212,28 @@ namespace Memory
             Rectangle sent = (Rectangle)sender;
         }
 
+        private List<Tuple<Card.CardShape, SolidColorBrush>> getAllCominations() {
+            var combinationList = new List<Tuple<Card.CardShape, SolidColorBrush>>();
+            foreach(Card.CardShape shape in Enum.GetValues(typeof (Card.CardShape))) {
+                foreach(SolidColorBrush color in colors ){
+                    combinationList.Add(Tuple.Create(shape,color));
+                }
+            }
+            Shuffle(combinationList);
+            return combinationList;
+        }
+
+        private void Shuffle<T>(IList<T> list) {
+            Random rng = new Random();
+            int n = list.Count;
+            while (n > 1) {
+                n--;
+                int k = rng.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+        }
         
     }
 }
