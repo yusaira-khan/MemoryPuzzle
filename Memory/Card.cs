@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -25,11 +26,12 @@ namespace Memory{
         
         private Shape[] front;
         private  SolidColorBrush backColor = new SolidColorBrush(Colors.Beige);
-        private  Thickness margin = new Thickness(10.0);
+        private double marginValue = 10.0;
+        private Thickness margin;
 
         public Card(Grid board, int[] rc, SolidColorBrush cardColor, CardShape shape){
             this.board = board;
-            
+            margin = new Thickness(this.marginValue);
             Row = rc[0];
             Column = rc[1];
             Color = cardColor;
@@ -47,21 +49,19 @@ namespace Memory{
             //TODO: add shape drawing instructions
             switch (Shape) {
                 case CardShape.Diamond:
-                    double width=50;
-                    double mdh = (back.ActualHeight)/2, mdw = (back.ActualWidth)/2;
-                    double dt = (back.ActualHeight-width), db = (back.ActualHeight+width);
-                    double cl = (back.ActualWidth-width), cr = (back.ActualWidth+width);
+                    double width=150;
+                    double topMargin = (2*marginValue+back.ActualHeight - width) /2;
+                    double leftMargin = (2 * marginValue + back.ActualWidth - width) / 2;
                     front = new Shape[1];
                     //front[0] = new Polygon();
                     Polygon p = new Polygon();
                     p.Points = new PointCollection();
-                    
-                    p.Points.Add(new Windows.Foundation.Point(mdw, dt));
-                    p.Points.Add(new Windows.Foundation.Point(cl,mdh));
-                    p.Points.Add(new Windows.Foundation.Point(mdw, db));
-                    p.Points.Add(new Windows.Foundation.Point(cr,mdh));
-                    
-                    
+
+                    p.Points.Add(new Windows.Foundation.Point( leftMargin, topMargin + width/2));
+                    p.Points.Add(new Windows.Foundation.Point( leftMargin + width/2, topMargin));
+                    p.Points.Add(new Windows.Foundation.Point(leftMargin + width, topMargin + width/2));
+                    p.Points.Add(new Windows.Foundation.Point(leftMargin + width/2, topMargin + width));
+         
                     p.Fill = Color;
                     front[0] = p;
                     break;
@@ -124,7 +124,7 @@ namespace Memory{
             
         }
         public void reveal() {
-            //
+            
             if (front == null) createFront();
             back.IsHitTestVisible = false;
             //board.Children.Remove(back);
@@ -132,12 +132,23 @@ namespace Memory{
                 placeOnBoard(front[i]);
             }
             revealed = true;
+            animate();
         }
-        public void cover() {
+        public async void cover() {
+           // Timer t = new Timer(new TimerCallback(removeFront), null, 500, Timeout.Infinite);
+            
+                removeFront();
+           // await Task.Run(() => removeFront());
+            
+        }
+        private void removeFront() {
             for (int i = 0; i < front.Length; i++) {
                 board.Children.Remove(front[i]);
             }
-            back.IsHitTestVisible=true;
+            back.IsHitTestVisible = true;
+        }
+        private void animate() {
+            
         }
         private void createBack() {
             back = new Rectangle();

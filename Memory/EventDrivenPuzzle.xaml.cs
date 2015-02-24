@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -146,7 +147,7 @@ namespace Memory
             int[] x = {0,0};
             int[] y = {0,1};
             cards = new Card[numCards];
-            cards[0] = new Card(board,x, colors[0], Card.CardShape.Dumbell);
+            cards[0] = new Card(board,x, colors[0], Card.CardShape.Diamond);
             cards[1] = new Card(board, y, colors[1], Card.CardShape.Square);
             cards[0].Back.PointerPressed+=CheckCard;
             //cards[0].Back.PointerEntered += HighlightCard;
@@ -173,9 +174,16 @@ namespace Memory
                 return;
             }
 
-            if (first.Color != currentCard.Color || first.Shape != currentCard.Shape) {
-                first.cover();
-                currentCard.cover();
+            /*first.cover();
+            first = currentCard;*/
+
+           if (first.Color != currentCard.Color || first.Shape != currentCard.Shape) {
+               var UISyncContext = TaskScheduler.FromCurrentSynchronizationContext();
+               Task.Delay(500).ContinueWith((antecedent) => {
+                   first.cover();
+                   currentCard.cover();
+                   first = null;
+               }, UISyncContext);
             }
             
         }
